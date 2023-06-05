@@ -1,0 +1,14 @@
+const mongoose = require("mongoose");
+const colors = require('colors')
+require('dotenv').config();
+
+var dbConnection = mongoose.connect(
+    process.env.MONGO_URI,
+).then((conn)=>{
+    console.log(`MongoDB Connected: ${conn.connection.host} database: ${conn.connection.name}`.bgBlue);
+}).catch((error)=>{
+    console.error(error+"".red);
+    process.exit();
+});
+
+module.exports = dbConnection;
