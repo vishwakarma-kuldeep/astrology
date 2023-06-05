@@ -3,6 +3,8 @@ const SubCategory = require("../models/subCategory");
 const Product = require("../models/product");
 const { imageUpload } = require("../global/fileUploader");
 const Discount = require("../models/discount");
+
+
 exports.addProduct = async (req, res) => {
   try {
     const {
@@ -206,6 +208,26 @@ exports.getAllProducts = async (req, res) => {
     }
 };
 
+exports.getProductById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const product = await Product.findById(id).populate([
+      {
+        path: "discount",
+      },
+      {
+        path: "category",
+      },
+      {
+        path: "subCategory",
+      },
+    ]);
+    return res.status(200).json({ product });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+}
 exports.addDiscount = async (req, res) => {
   const id = req.params.id;
   const {discountPercentage,name,description,isActivated} = req.body;

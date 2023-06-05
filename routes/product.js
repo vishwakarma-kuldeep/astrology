@@ -10,4 +10,5 @@ router.post('/update/:id', [middleware.authenticateToken, adminMiddleware.checkA
 router.post('/add-image/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin], productController.addImage);
 router.post('/add-discount/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin,product.checkProduct], productController.addDiscount);
 router.get('/get-all', [middleware.authenticateToken], productController.getAllProducts);
+router.get('/get/:id', [middleware.authenticateToken,product.checkProduct], productController.getProductById);
 module.exports = router;
