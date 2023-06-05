@@ -26,7 +26,7 @@ const paymentSchema = new Schema({
     paymentStatus:{
         type:String,
         trim:true,
-        Enumerator:["SUCCESS","FAILED","PENDING"]
+        Enumerator:["SUCCESS","FAILED","PENDING","success","failed","pending"]
     },
     subscriptionId:{
         type:String,

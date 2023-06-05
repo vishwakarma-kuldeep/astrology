@@ -7,7 +7,7 @@ exports.addCart = async (req, res) => {
     let { productId, quantity } = req.body;
     let checkCart = await Cart.findOne({
         userId: req.user.userId,
-        productId: productId,
+       productId: productId ,isDeleted:false
         });
     if (checkCart) {
         return res.status(400).json({ message: "Product already in cart" });
@@ -31,6 +31,7 @@ exports.updateCart = async (req, res) => {
         let cart = await Cart.findOne({
             userId: req.user.userId,
             productId: productId,
+            isDeleted:false
         });
         if (!cart) {
             return res.status(404).json({ message: "Product not found" });
@@ -49,6 +50,7 @@ exports.deleteCart = async (req, res) => {
         let cart = await Cart.findOne({
             userId: req.user.userId,
             productId: req.params.id,
+            isDeleted:false
         });
         if (!cart) {
             return res.status(404).json({ message: "Product not found" });
@@ -66,7 +68,7 @@ exports.deleteCart = async (req, res) => {
 
 exports.getCart = async (req, res) => {
     try{
-        let cart = await Cart.find({userId:req.user.userId}).populate([
+        let cart = await Cart.find({userId:req.user.userId,isDeleted:false}).populate([
             {
                 path: "userId",
             },

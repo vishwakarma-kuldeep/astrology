@@ -14,4 +14,6 @@ router.get('/get/:id', [middleware.authenticateToken,product.checkProduct], prod
 
 // Get Products by category
 router.get('/get-by-category/:id', [middleware.authenticateToken,product.checkCategory], productController.getProductsByCategory);
+// Get Products by subcategory
+router.get('/get-by-subcategory/:id', [middleware.authenticateToken,product.checkSubCategory], productController.getProductsBySubCategory);
 module.exports = router;
