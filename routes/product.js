@@ -11,4 +11,7 @@ router.post('/add-image/:id', [middleware.authenticateToken, adminMiddleware.che
 router.post('/add-discount/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin,product.checkProduct], productController.addDiscount);
 router.get('/get-all', [middleware.authenticateToken], productController.getAllProducts);
 router.get('/get/:id', [middleware.authenticateToken,product.checkProduct], productController.getProductById);
+
+// Get Products by category
+router.get('/get-by-category/:id', [middleware.authenticateToken,product.checkCategory], productController.getProductsByCategory);
 module.exports = router;

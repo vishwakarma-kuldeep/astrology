@@ -253,3 +253,24 @@ exports.addDiscount = async (req, res) => {
   }
 };
 
+
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const products = await Product.find({ category: id, isDeleted: false }).populate([
+      {
+        path: "discount",
+      },
+      {
+        path: "category",
+      },
+      {
+        path: "subCategory",
+      },
+    ]);
+    return res.status(200).json({ products });
+  } catch (error) {
+    console.error(error);;
+    return res.status(500).json({ message: error.message });
+  }
+}
