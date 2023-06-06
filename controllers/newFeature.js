@@ -1,5 +1,5 @@
 const newFeature = require('../models/newFeature')
-const aboutUs = require('../models/aboutUs')
+const aboutUs = require('../models/aboutus')
 const { uploadFile } = require('../global/fileUploader')
 exports.createFeature = async (req, res) => {
   try {

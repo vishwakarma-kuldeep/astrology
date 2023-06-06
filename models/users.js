@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema(
   {
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ["male", "female", "other"],
+      enum: ['male', 'female', 'other'],
     },
     countryCode: {
       type: String,
@@ -50,22 +50,18 @@ const userSchema = new mongoose.Schema(
     },
     cart: [
       {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
       },
     ],
-    wishlist: [
-      {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
-      },
-    ],
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product' }],
     subscription: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "subscription",
+      ref: 'subscription',
     },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
   },
-  { timestamps: true }
-);
+  { timestamps: true },
+)
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model('user', userSchema)

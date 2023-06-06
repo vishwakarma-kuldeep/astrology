@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const aboutusSchema = new Schema({
+const aboutUsSchema = new Schema({
     title:{
         type:String,
         trim:true,
@@ -22,4 +22,4 @@ const aboutusSchema = new Schema({
     }
 
 },{timestamps:true});
-module.exports = mongoose.model('aboutus',aboutusSchema);
+module.exports = mongoose.model('aboutus',aboutUsSchema);

@@ -1,6 +1,7 @@
 const router  = require('express').Router();
 const userController = require('../controllers/users');
 const middleware = require('../middlewares/auth');
+const { checkProduct } = require('../middlewares/product');
 const validator = require('../validators/validator');
 
 // Get routes
@@ -12,4 +13,10 @@ router.post('/signup',[validator.signup],userController.signup);
 router.post('/authenticate',[validator.authenticate],userController.authenticate);
 router.post('/update',middleware.authenticateToken,userController.updateProfile);
 
+// Add product to wishlist
+router.post('/add-to-wishlist',[middleware.authenticateToken,checkProduct],userController.addToWishlist);
+// remove product from wishlist
+router.post('/remove-from-wishlist',[middleware.authenticateToken,checkProduct],userController.removeFromWishlist);
+// Get wishlist
+router.get('/get-wishlist',middleware.authenticateToken,userController.getWishlist);
 module.exports = router;

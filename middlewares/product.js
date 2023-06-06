@@ -5,7 +5,7 @@ const subCategory = require("../models/subCategory");
 exports.checkProduct = async (req, res, next) => {
   try {
     const id = req.params.id || req.body.productId;
-    const product = await Product.findOne({ _id: id });
+    const product = await Product.findOne({ _id: id,isDeleted:false });
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
