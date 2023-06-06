@@ -4,7 +4,7 @@ const Product = require("../models/product.js");
 const Payment = require("../models/payment.js");
 const global = require("../global/global.js");
 exports.createOrder = async (req, res) => {
-  let { productId, quantity, paymentId } = req.body;
+  let { productId, paymentId } = req.body;
   try {
     let order = new Order();
     let product = await Product.findById(productId);
