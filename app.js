@@ -25,6 +25,8 @@ const cardRouter = require("./routes/card");
 const planRouter = require("./routes/plan"); 
 const subscriptionRouter = require("./routes/subscription");
 const galleryRouter = require("./routes/gallery");
+const feedback = require("./routes/feedback");
+
 
 var app = express();
 app.use((req, res, next) => {
@@ -64,6 +66,9 @@ app.use('/api/card', cardRouter);
 app.use('/api/plan', planRouter);
 app.use('/api/subscription', subscriptionRouter);
 app.use('/api/gallery', galleryRouter);
+app.use('/api/cms',feedback);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
