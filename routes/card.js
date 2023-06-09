@@ -32,5 +32,5 @@ router.post(
   Card.deleteCard
 );
 
-router.post('/add-image',[authenticateToken,checkAdmin,checkCardId],Card.addImage);
+router.post('/add-image/:id',[authenticateToken,checkAdmin,checkCardId],Card.addImage);
 module.exports = router;

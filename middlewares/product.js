@@ -19,7 +19,7 @@ exports.checkProduct = async (req, res, next) => {
 exports.checkCategory = async (req, res, next) => {
   try {
     const id = req.params.id|| req.body.categoryId;
-    const category = await Category.findOne({ _id: id });
+    const category = await Category.findOne({ _id: id,isDeleted:false });
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }

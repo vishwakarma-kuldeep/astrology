@@ -37,7 +37,7 @@ exports.addAboutUs = async (req, res) => {
     })
     if (req.files || req.file) {
       const file = req.files[0] || req.file
-      const fileUrl = await uploadFile(file)
+      const fileUrl = await uploadFile(file, 'aboutUs')
       if (fileUrl) {
         aboutUsData.image = fileUrl.Location
         await aboutUsData.save()

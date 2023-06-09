@@ -25,6 +25,10 @@ const adminSchema = new mongoose.Schema({
     otpExpiration:{
         type:Date
     },
+    mobileNumber:{
+        type:String,
+        trim:true
+    },
     isDeleted:{type:Boolean,default:false},
     deletedAt:{type:Date}
 

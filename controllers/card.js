@@ -12,18 +12,19 @@ exports.createCard = async (req, res) => {
     });
     await card.save();
     let cardData = await Card.findById(card._id);
-    console.log(cardData);
     cardData.horoscope.push(horoscope);
     cardData.horoscopeCategory.push(horoscopeCategory);
-    if (req.file || req.files) {
+    if (req.file || req.files.length > 0) {
       if (req.files && req.files.length > 0) {
-        req.files.forEach(async (file) => {
-          const image = await globalImageUploader(file, cardData._id, "card");
+        for (let file = 0; file < req.files.length; file++) {
+          const image = await globalImageUploader(req.files[file], cardData._id, "card");
           cardData.images.push(image.Location);
-        });
+        }
+        await cardData.save();
       } else {
         const image = await globalImageUploader(req.file, cardData._id, "card");
         cardData.images.push(image.Location);
+        await cardData.save();
       }
     }
     await cardData.save();
@@ -57,22 +58,25 @@ exports.updateCard = async (req, res) => {
   const { title, description, horoscope, horoscopeCategory } = req.body;
   try {
     let card = await Card.findById(req.params.id);
-    card.title = title;
-    card.description = description;
-    card.horoscope = horoscope;
-    card.horoscopeCategory = horoscopeCategory;
+    card.title = title || card.title;
+    card.description = description || card.description;
+    card.horoscope = horoscope || card.horoscope;
+    card.horoscopeCategory = horoscopeCategory || card.horoscopeCategory;
     if (req.file || req.files) {
       if (req.files && req.files.length > 0) {
-        req.files.forEach(async (file) => {
-          const image = await globalImageUploader(file, card._id, "card");
+        for (let file = 0; file < req.files.length; file++) {
+          const image = await globalImageUploader(req.files[file], card._id, "card");
           card.images.push(image.Location);
-        });
+          
+        }
+        await card.save();
       } else {
         const image = await globalImageUploader(req.file, card._id, "card");
         card.images.push(image.Location);
       }
     }
     await card.save();
+    console.log(card)
     return res.status(200).json({ message: "Card updated successfully" });
   } catch (error) {
     console.error(error);
@@ -116,49 +120,23 @@ exports.addImage = async (req, res) => {
   try {
     const id = req.params.id || req.body.card;
     let card = await Card.findById(id);
-    console.log(card);
-    var images = [];
-    if (req.file || req.files) {
-      if (req.files && req.files.length > 0) {
-        req.files.forEach(async (file) => {
-          const image = await globalImageUploader(file, card._id, "card");
-          images.push(image.Location);
-          //   console.log(image)
-         
-          await Card.updateOne(
-            {
-              _id: id,
-            },
-            {
-              $set: {
-                $push: {
-                  images: image.Location,
-                },
-              },
-            },
-            { new: true }
-          );
-        });
-      } else {
-        const image = await globalImageUploader(req.file, card._id, "card");
-        console.log(image);
-        images = [...images].push(image.Location);
-      }
+ if(req.file || req.files){
+   if(req.files.length>0){
+    for (let file = 0; file < req.files.length; file++) {
+      const image = await globalImageUploader(req.files[file], card._id, "card");
+      console.log(image)
+      card.images.push(image.Location);
     }
-    console.log(images);
-    if (images.length > 0) {
-      console.log("I am here");
-      await Card.updateOne(
-        { _id: id },
-        {
-          $set: {
-            $push: {
-              images: [...images],
-            },
-          },
-        }
-      );
-    }
+
+    await card.save();
+   }
+   else{
+    const image = await globalImageUploader(req.file, card._id, "card");
+    console.log(image)
+    card.images.push(image.Location);
+    await card.save();
+   }
+ }
     return res.status(200).json({ message: "Image added successfully" });
   } catch (error) {
     console.error(error);

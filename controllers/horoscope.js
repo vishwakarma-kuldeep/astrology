@@ -24,7 +24,7 @@ exports.createHoroscopeCategory = async (req, res) => {
           await horoscopeCategory.save()
         })
       } else {
-        console.log('or I am here')
+        
         const image = await globalImageUploader(
           req.file,
           horoscopeCategory._id,

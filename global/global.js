@@ -9,11 +9,9 @@ const Subscription = require("../models/subscription");
 const hashGenerator = async (input) => {
   const salt = 10;
   const hash = await bcrypt.hash(input, salt);
-  console.log(hash);
   return hash;
 };
 const hashVerifier = async (input, hash) => {
-  console.log(input, hash);
   const result = await bcrypt.compare(input, hash);
   return result;
 };
@@ -101,11 +99,10 @@ const subscriptionIdGenerator = () => {
   return subscriptionId;
 };
 const subscriptionId = async () => {
-    console.log("==================================== I am here =============================")
+    
   const subscriptionId = subscriptionIdGenerator();
   const subscription = await Subscription.find();
-  console.log("====================================")
-  console.log(subscription)
+  
   const checkId = lodash.find(subscription, { subscriptionId: subscriptionId });
   if (checkId) {
     subscriptionId();
