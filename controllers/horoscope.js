@@ -6,6 +6,8 @@ const HoroscopeCategory = require('../models/horoscopeCategory')
 exports.createHoroscopeCategory = async (req, res) => {
   const { name, description } = req.body
   try {
+    if (!req.body)
+      return res.status(400).json({ message: 'Please fill all the fields' })
     let horoscopeCategory = new HoroscopeCategory({
       name,
       description,
@@ -24,7 +26,6 @@ exports.createHoroscopeCategory = async (req, res) => {
           await horoscopeCategory.save()
         })
       } else {
-        
         const image = await globalImageUploader(
           req.file,
           horoscopeCategory._id,
@@ -58,7 +59,10 @@ exports.getHoroscopeCategory = async (req, res) => {
 
 exports.createHoroscope = async (req, res) => {
   const { title, description, date, time, horoscopeType } = req.body
+
   try {
+    if (!req.body || req.body === null)
+      return res.status(400).json({ message: 'Please fill all the fields' })
     let horoscope = await Horoscope.find({
       date: date,
       horoscopeType: horoscopeType,
@@ -70,21 +74,23 @@ exports.createHoroscope = async (req, res) => {
     horoscope = new Horoscope()
     if (req.files || req.file) {
       if (req.files && req.files.length > 0) {
-        req.files.forEach(async (file) => {
+        for (let file = 0; file < req.files.length; file++) {
           const image = await globalImageUploader(
-            file,
+            req.files[file],
             horoscope._id,
             'horoscope',
           )
-          horoscope.image.push(image)
-        })
+          horoscope.image.push(image.Location)
+        }
+        await horoscope.save()
       } else {
         const image = await globalImageUploader(
           req.file,
           horoscope._id,
           'horoscope',
         )
-        horoscope.image.push(image)
+        horoscope.image.push(image.Location)
+        await horoscope.save()
       }
     }
     horoscope.title = title
@@ -126,21 +132,92 @@ exports.getHoroscopeById = async (req, res) => {
 
 exports.updateHoroscope = async (req, res) => {
   try {
-    const { title, description, date, time } = req.body
+    const { title, description, date, time, horoscopeType } = req.body
+    if (!req.body || req.body === null)
+      return res.status(400).json({ message: 'Please fill all the fields' })
     const id = req.params.id
-    const horoscope = await Horoscope.findById(id)
+    let horoscope = await Horoscope.findById(id)
     if (!horoscope) {
       return res.status(404).json({ message: 'Horoscope not found' })
     }
-    horoscope.title = title
-    horoscope.description = description
-    if (req.files || req.file) {
-      const image = await horoscopeUpload(req.files[0], horoscope._id)
-      horoscope.image = image
+
+    horoscope.title = title ? title : horoscope.title
+    horoscope.description = description ? description : horoscope.description
+    horoscope.date = date ? date : horoscope.date
+    horoscope.time = time ? time : horoscope.time
+    horoscope.horoscopeType = horoscopeType
+      ? horoscopeType
+      : horoscope.horoscopeType
+    if (req.file || req.files) {
+      if (req.files && req.files.length > 0) {
+        for (let file = 0; file < req.files.length; file++) {
+          const image = await globalImageUploader(
+            req.files[file],
+            horoscope._id,
+            'horoscope',
+          )
+          horoscope.image.push(image.Location)
+        }
+        await horoscope.save()
+      } else {
+        if (req.file) {
+          const image = await globalImageUploader(
+            req.file,
+            horoscope._id,
+            'horoscope',
+          )
+          horoscope.image.push(image.Location)
+          await horoscope.save()
+        }
+      }
     }
-    horoscope.image = image
     await horoscope.save()
     return res.status(200).json({ message: 'Horoscope updated successfully' })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+exports.updateHoroscopeCategory = async (req, res) => {
+  try {
+    const { name, description } = req.body
+    if (!req.body || req.body === null)
+      return res.status(400).json({ message: 'Please fill all the fields' })
+    const id = req.params.id
+    let horoscopeCategory = await HoroscopeCategory.findById(id)
+    if (!horoscopeCategory) {
+      return res.status(404).json({ message: 'Horoscope category not found' })
+    }
+    horoscopeCategory.name = name ? name : horoscopeCategory.name
+    horoscopeCategory.description = description
+      ? description
+      : horoscopeCategory.description
+    if (req.file || req.files) {
+      if (req.files && req.files.length > 0) {
+        const image = await globalImageUploader(
+          req.files[0],
+          horoscopeCategory._id,
+          'horoscope',
+        )
+        horoscopeCategory.image = image.Location
+        await horoscopeCategory.save()
+      } else {
+        if (req.file) {
+          const image = await globalImageUploader(
+            req.file,
+            horoscopeCategory._id,
+            'horoscope',
+          )
+          horoscopeCategory.image = image.Location
+          await horoscopeCategory.save()
+        }
+      }
+    }
+    await horoscopeCategory.save()
+    return res.status(200).json({
+      message: 'Horoscope category updated successfully',
+    })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
@@ -154,9 +231,39 @@ exports.deleteHoroscope = async (req, res) => {
     if (!horoscope) {
       return res.status(404).json({ message: 'Horoscope not found' })
     }
-    horoscope.isDeleted = true
+   if(!req.body || req.body === null){
+      return res.status(400).json({message:"Please fill all the fields"})
+   }
+    const { isDeleted } = req.body
+    horoscope.isDeleted = isDeleted ? isDeleted : horoscope.isDeleted
+    horoscope.deletedAt = isDeleted ? Date.now() : null
     await horoscope.save()
     return res.status(200).json({ message: 'Horoscope deleted successfully' })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+exports.deleteHoroscopeCategory = async (req, res) => {
+  try {
+    const id = req.params.id
+    let horoscopeCategory = await HoroscopeCategory.findById(id)
+    if (!horoscopeCategory) {
+      return res.status(404).json({ message: 'Horoscope category not found' })
+    }
+    if (!req.body || req.body === null) {
+      return res.status(400).json({ message: 'Please fill all the fields' })
+    }
+    const { isDeleted } = req.body
+    horoscopeCategory.isDeleted = isDeleted
+      ? isDeleted
+      : horoscopeCategory.isDeleted
+    horoscopeCategory.deletedAt = isDeleted ? Date.now() : null
+    await horoscopeCategory.save()
+    return res.status(200).json({
+      message: 'Horoscope category deleted successfully',
+    })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })

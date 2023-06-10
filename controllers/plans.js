@@ -19,7 +19,7 @@ exports.createPlan = async (req, res) => {
 };
 
 exports.updatePlan = async (req, res) => {
-    const { title, description, amount, currency,planType } = req.body;
+    const { title, description, amount, currency,planType,isDeleted } = req.body;
     try {
         const plan = await Plan.findById(req.params.id);
         plan.title = title ? title : plan.title;
@@ -27,7 +27,8 @@ exports.updatePlan = async (req, res) => {
         plan.amount = amount ? amount : plan.amount ;
         plan.currency = currency ? currency : plan.currency;
         plan.planType = planType ? planType : plan.planType;
-
+        plan.isDeleted = isDeleted ? isDeleted : plan.isDeleted;
+        plan.deletedAt = isDeleted ? Date.now() : plan.deletedAt;
         await plan.save();
         return res.status(200).json({ message: "Plan updated successfully" });
     } catch (error) {

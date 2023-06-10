@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
       { new: true },
     )
 
-    return res.status(200).json({ message: 'OTP sent successfully' })
+    return res.status(200).json({ message: 'OTP sent successfully',otp })
   } catch (error) {
     console.log(error)
     return res.status(500).json({ message: error.message })

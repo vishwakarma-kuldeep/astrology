@@ -58,10 +58,10 @@ exports.updateCard = async (req, res) => {
   const { title, description, horoscope, horoscopeCategory } = req.body;
   try {
     let card = await Card.findById(req.params.id);
-    card.title = title || card.title;
-    card.description = description || card.description;
-    card.horoscope = horoscope || card.horoscope;
-    card.horoscopeCategory = horoscopeCategory || card.horoscopeCategory;
+    card.title = title ? title : card.title;
+    card.description = description ? description : card.description;
+    card.horoscope = horoscope ? horoscope: card.horoscope;
+    card.horoscopeCategory = horoscopeCategory?horoscopeCategory: card.horoscopeCategory;
     if (req.file || req.files) {
       if (req.files && req.files.length > 0) {
         for (let file = 0; file < req.files.length; file++) {
@@ -76,7 +76,6 @@ exports.updateCard = async (req, res) => {
       }
     }
     await card.save();
-    console.log(card)
     return res.status(200).json({ message: "Card updated successfully" });
   } catch (error) {
     console.error(error);
@@ -124,7 +123,6 @@ exports.addImage = async (req, res) => {
    if(req.files.length>0){
     for (let file = 0; file < req.files.length; file++) {
       const image = await globalImageUploader(req.files[file], card._id, "card");
-      console.log(image)
       card.images.push(image.Location);
     }
 
@@ -132,7 +130,6 @@ exports.addImage = async (req, res) => {
    }
    else{
     const image = await globalImageUploader(req.file, card._id, "card");
-    console.log(image)
     card.images.push(image.Location);
     await card.save();
    }

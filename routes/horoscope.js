@@ -1,14 +1,40 @@
-const Horoscope = require('../controllers/horoscope');
-const {checkAdmin} = require('../middlewares/adminmiddleware');
-const {authenticateToken} = require('../middlewares/auth');
-const {checkHoroscopeCategory} = require('../middlewares/horoscope');
-const router = require('express').Router();
+const Horoscope = require('../controllers/horoscope')
+const { checkAdmin } = require('../middlewares/adminmiddleware')
+const { authenticateToken } = require('../middlewares/auth')
+const { checkHoroscopeCategory } = require('../middlewares/horoscope')
+const router = require('express').Router()
 
-router.post('/create-horoscope',[authenticateToken,checkAdmin],Horoscope.createHoroscope);
+router.post(
+  '/create-horoscope',
+  [authenticateToken, checkAdmin],
+  Horoscope.createHoroscope,
+)
 
-router.post('/create-horoscope-category',[authenticateToken,checkAdmin,checkHoroscopeCategory],Horoscope.createHoroscopeCategory);
+router.post(
+  '/create-horoscope-category',
+  [authenticateToken, checkAdmin, checkHoroscopeCategory],
+  Horoscope.createHoroscopeCategory,
+)
 
-router.get('/get',[authenticateToken],Horoscope.getHoroscope);
-router.get('/get/:id',[authenticateToken],Horoscope.getHoroscopeById);
-router.get('/get-horoscope-category',[authenticateToken],Horoscope.getHoroscopeCategory);
-module.exports = router;
+router.get('/get', [authenticateToken], Horoscope.getHoroscope)
+router.get('/get/:id', [authenticateToken], Horoscope.getHoroscopeById)
+router.get(
+  '/get-horoscope-category',
+  [authenticateToken],
+  Horoscope.getHoroscopeCategory,
+)
+
+router.post(
+  '/update-horoscope/:id',
+  [authenticateToken, checkAdmin],
+  Horoscope.updateHoroscope,
+)
+router.post(
+  '/update-horoscope-category/:id',
+  [authenticateToken, checkAdmin],
+  Horoscope.updateHoroscopeCategory,
+)
+
+router.post('/delete-horo-category/:id', [authenticateToken, checkAdmin], Horoscope.deleteHoroscopeCategory);
+router.post('/delete-horoscope/:id', [authenticateToken, checkAdmin], Horoscope.deleteHoroscope);
+module.exports = router

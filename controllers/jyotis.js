@@ -51,17 +51,19 @@ exports.updateJyotis = async (req, res) => {
     expertIn,
     isDeleted,
   } = req.body;
-  let address = JSON.parse(req.body.address);
+  let address = req.body.address? JSON.parse(req.body.address) : {};
   try {
     const jyotis = await Jyotis.findById(req.params.id);
     if (req.files || req.file) {
       if (req.files.length > 0) {
         const image = await globalImageUploader(req.files[0], jyotis._id, "jyotis");
         jyotis.image = image.Location;
+        await jyotis.save();
       }
       if (req.file) {
         const image = await globalImageUploader(req.file, jyotis._id,"jyotis");
         jyotis.image = image.Location;
+        await jyotis.save();
       }
     }
     // Auth details update
