@@ -54,3 +54,12 @@ exports.sendGetInTouchMessage = async (req,res)=>{
         return res.status(500).json({message:error.message});
     }
 }
+exports.getDataOfGetInTouch = async (req,res)=>{
+    try {
+        const getInTouchData = await getInTouch.find({isDeleted:false},{email:1,mobileNumber:1,address:1});
+        return res.status(200).json({getInTouchData});
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({message:error.message});
+    }
+}
