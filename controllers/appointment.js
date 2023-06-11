@@ -40,10 +40,11 @@ exports.bookAppointment = async (req, res) => {
 
 exports.getMyAppointments = async (req, res) => {
   try {
+
     let appointments = await Appointment.find({ user: req.user.userId,isDeleted:false })
       .populate({
         path: "jyotis",
-        select: "name email",
+        select: "name email image",
       })
       .sort({ createdAt: -1 });
     return res.status(200).json({ appointments });
@@ -59,7 +60,7 @@ exports.getAllAppointments = async (req, res) => {
       .populate([
         {
             path: "user",
-            select: "firstName lastName mobileNumber countryCode email",
+            select: "firstName lastName mobileNumber countryCode email image",
         },
         {
             path: "jyotis",
