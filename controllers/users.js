@@ -19,6 +19,7 @@ exports.signup = async (req, res) => {
     }
 
     let otp = otpGenerator()
+    let sentotp = otp;
     let otpExpiration = new Date(new Date().getTime() + 5 * 60 * 1000)
     otp = await hashGenerator(otp.toString())
     await userModel.updateOne(
@@ -27,7 +28,7 @@ exports.signup = async (req, res) => {
       { new: true },
     )
 
-    return res.status(200).json({ message: 'OTP sent successfully',otp })
+    return res.status(200).json({ message: 'OTP sent successfully',sentotp })
   } catch (error) {
     console.log(error)
     return res.status(500).json({ message: error.message })

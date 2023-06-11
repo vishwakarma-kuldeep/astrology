@@ -52,19 +52,17 @@ exports.updateFolder = async (req, res) => {
     gallery.description = description ? description : gallery.description;
     if (req.file || req.files) {
       if (req.files && req.files.length > 0) {
-        console.log("Req.Files");
-        req.files.forEach(async (file) => {
+       for(let file=0;file<req.files.length;file++){
           const imageData = await globalImageUploader(
-            file,
+            req.files[file],
             gallery._id,
             "gallery"
           );
-          gallery.image = imageData.Location;
-          await gallery.save();
-        });
+          gallery.image = imageData.Location
+        }
+        await gallery.save()
       } else {
         if (req.file) {
-          console.log("Req.File");
           const imageData = await globalImageUploader(
             req.file,
             gallery._id,
