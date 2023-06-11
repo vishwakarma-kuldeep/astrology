@@ -17,6 +17,7 @@ exports.addProduct = async (req, res) => {
       discount,
       HSNCODE,
       GST,
+      currency,
       inStock,
       quantity,
       SKU,
@@ -31,6 +32,7 @@ exports.addProduct = async (req, res) => {
     product.category = category
     product.subCategory = subCategory
     product.price = price
+    product.currency = currency
     product.discount = discount
     product.HSNCODE = HSNCODE
     product.GST = GST
@@ -39,18 +41,17 @@ exports.addProduct = async (req, res) => {
     product.SKU = SKU
 
     if (req.files || req.file) {
-      if (req.files.length > 1) {
-        req.files.map(async (file) => {
-          const image = await imageUpload(file, product._id)
+      if ( req.files && req.files.length > 0) {
+        for(let file=0;file<req.files.length;file++){
+          const image = await imageUpload(req.files[file], product._id)
           product.image.push(image.Location)
-        })
-      } else {
-        const image = await imageUpload(req.files[0], product._id)
-        product.image.push(image.Location)
       }
+      await product.save()
+      } 
       if (req.file) {
         const image = await imageUpload(req.file, product._id)
         product.image.push(image.Location)
+        await product.save()
       }
     }
     await product.save()
@@ -100,19 +101,17 @@ exports.updateProduct = async (req, res) => {
     }
 
     if (req.files || req.file) {
-      if (req.files.length > 1) {
-        console.log('I am here')
-        req.files.map(async (file) => {
-          const image = await imageUpload(file, product._id)
+      if ( req.files && req.files.length > 0) {
+        for(let file=0;file<req.files.length;file++){
+          const image = await imageUpload(req.files[file], product._id)
           product.image.push(image.Location)
-        })
-      } else {
-        const image = await imageUpload(req.files[0], product._id)
-        product.image.push(image.Location)
       }
+      await product.save()
+      } 
       if (req.file) {
         const image = await imageUpload(req.file, product._id)
         product.image.push(image.Location)
+        await product.save()
       }
     }
     await product.save()
@@ -148,18 +147,17 @@ exports.addImage = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' })
     }
     if (req.files || req.file) {
-      if (req.files.length > 1) {
-        req.files.map(async (file) => {
-          const image = await imageUpload(file, product._id)
+      if ( req.files && req.files.length > 0) {
+        for(let file=0;file<req.files.length;file++){
+          const image = await imageUpload(req.files[file], product._id)
           product.image.push(image.Location)
-        })
-      } else {
-        const image = await imageUpload(req.files[0], product._id)
-        product.image.push(image.Location)
       }
+      await product.save()
+      } 
       if (req.file) {
         const image = await imageUpload(req.file, product._id)
         product.image.push(image.Location)
+        await product.save()
       }
     }
     await product.save()

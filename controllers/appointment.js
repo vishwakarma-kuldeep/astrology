@@ -40,7 +40,7 @@ exports.bookAppointment = async (req, res) => {
 
 exports.getMyAppointments = async (req, res) => {
   try {
-    let appointments = await Appointment.find({ user: req.user.userId })
+    let appointments = await Appointment.find({ user: req.user.userId,isDeleted:false })
       .populate({
         path: "jyotis",
         select: "name email",
@@ -55,7 +55,7 @@ exports.getMyAppointments = async (req, res) => {
 
 exports.getAllAppointments = async (req, res) => {
   try {
-    let appointments = await Appointment.find()
+    let appointments = await Appointment.find({isDeleted:false})
       .populate([
         {
             path: "user",

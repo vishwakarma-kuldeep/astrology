@@ -27,6 +27,10 @@ const productSchema = new Schema(
       type: String,
       trim: true,
     },
+    currency: {
+      type: String,
+      trim: true,
+    },
     discount: {
       type: Schema.Types.ObjectId,
       ref: "Discount",
@@ -51,6 +55,7 @@ const productSchema = new Schema(
       type: String,
       trim: true,
     },
+
 
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
