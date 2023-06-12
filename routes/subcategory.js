@@ -15,4 +15,5 @@ router.post(
   SubCategoryController.updateSubCategory,
 )
 
+router.get('/get/:id', [middleware.authenticateToken], SubCategoryController.getSubCategory)
 module.exports = router

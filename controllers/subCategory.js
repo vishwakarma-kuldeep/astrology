@@ -83,3 +83,24 @@ exports.deleteSubCategory = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+
+exports.getSubCategories = async (req, res) => {
+  try {
+    const subCategory = await SubCategory.find({ isDeleted: false })
+    return res.status(200).json({ subCategory })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+exports.getSubCategory = async (req, res) => {
+  try {
+    // where category 
+    const category = await Category.findById(req.params.id)
+    const subCategory = await SubCategory.find({ category: category._id,isDeleted: false }).populate('category');
+    return res.status(200).json({ subCategory })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}

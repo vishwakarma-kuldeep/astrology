@@ -14,6 +14,10 @@ const gallerySchema = new Schema({
         type:String,
         trim:true
     },
+    videoCount:{
+        type:Number,
+        default:0
+    },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
 },{timestamps:true});

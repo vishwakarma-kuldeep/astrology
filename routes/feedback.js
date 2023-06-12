@@ -19,7 +19,7 @@ router.post('/update/:id',[authenticateToken,checkAdmin],Faq.updateFaq);
 
 // upcoming features
 router.post('/create-feature',[authenticateToken,checkAdmin],newFeature.createFeature);
-router.post('/update/:id',[authenticateToken,checkAdmin],newFeature.updateFeature);
+router.post('/update-new-feature/:id',[authenticateToken,checkAdmin],newFeature.updateFeature);
 router.get('/new-features',[authenticateToken],newFeature.getFeatures);
 
 // About Us

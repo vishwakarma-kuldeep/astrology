@@ -8,7 +8,8 @@ var logger = require("morgan");
 var multer = require("multer");
 
 // Db Connection
-const{ dbConnection} = require("./lib/db");
+const dbConnection = require("./lib/db");
+
 // Import Routes
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
@@ -27,15 +28,15 @@ const subscriptionRouter = require("./routes/subscription");
 const galleryRouter = require("./routes/gallery");
 const feedback = require("./routes/feedback");
 
-
+dbConnection();
 var app = express();
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, authorization");
   next();
 });
-
 
 app.use(logger("dev"));
 app.use(bodyParser.json());

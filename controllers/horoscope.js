@@ -15,16 +15,15 @@ exports.createHoroscopeCategory = async (req, res) => {
 
     if (req.file || req.files) {
       if (req.files && req.files.length > 0) {
-        req.files.forEach(async (file) => {
+       for(let file = 0; file < req.files.length; file++) {
           const image = await globalImageUploader(
-            file,
+            req.files[file],
             horoscopeCategory._id,
             'horoscopeCategory',
           )
-
           horoscopeCategory.image = image.Location
-          await horoscopeCategory.save()
-        })
+        }
+        await horoscopeCategory.save()
       } else {
         const image = await globalImageUploader(
           req.file,
@@ -108,10 +107,8 @@ exports.createHoroscope = async (req, res) => {
 
 exports.getHoroscope = async (req, res) => {
   try {
-    const horoscope = await Horoscope.find({ isDeleted: false }).sort({
-      date: -1,
-    })
-    console.log(horoscope)
+    const date = req.query.date
+    const horoscope = await Horoscope.find({date:date, isDeleted: false })
     return res.status(200).json({ horoscope })
   } catch (error) {
     console.error(error)

@@ -80,3 +80,13 @@ exports.deleteCategory = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+
+exports.getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find({ isDeleted: false })
+    return res.status(200).json({ categories })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
