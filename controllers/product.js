@@ -322,7 +322,7 @@ exports.getNewArrivals = async (req, res) => {
         const date = new Date()
         const diffTime = Math.abs(date - product.createdAt)
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        if(diffDays <= 10){
+        if(diffDays <= 90){
           return product
         }
       })
