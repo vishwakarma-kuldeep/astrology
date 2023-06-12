@@ -437,6 +437,35 @@ exports.searchProducts = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+// get similar products
+exports.getSimilarProducts = async (req, res) => {
+  try {
+    const { category, subCategory } = req.body
+    const products = await Product.find({
+      category: category,
+      subCategory: subCategory,
+      isDeleted: false,
+    }).populate([
+      {
+        path: 'discount',
+      },
+      {
+        path: 'category',
+      },
+      {
+        path: 'subCategory',
+      },
+    ])
+    return res.status(200).send({
+      products,
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send({
+      message: error.message,
+    })
+  }
+}
 
 // get random up to 5 products for carousel
 const getRandomProducts = async () => {

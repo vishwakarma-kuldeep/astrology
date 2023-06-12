@@ -86,6 +86,11 @@ router.post(
   productController.deleteProductsFromCarouselOrHide,
 )
 
-router.get('/search',[middleware.authenticateToken], productController.searchProducts)
+router.get(
+  '/search',
+  [middleware.authenticateToken],
+  productController.searchProducts,
+)
+router.post('/get-similar-products', [middleware.authenticateToken],productController.getSimilarProducts)
 
 module.exports = router
