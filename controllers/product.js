@@ -41,13 +41,13 @@ exports.addProduct = async (req, res) => {
     product.SKU = SKU
 
     if (req.files || req.file) {
-      if ( req.files && req.files.length > 0) {
-        for(let file=0;file<req.files.length;file++){
+      if (req.files && req.files.length > 0) {
+        for (let file = 0; file < req.files.length; file++) {
           const image = await imageUpload(req.files[file], product._id)
           product.image.push(image.Location)
+        }
+        await product.save()
       }
-      await product.save()
-      } 
       if (req.file) {
         const image = await imageUpload(req.file, product._id)
         product.image.push(image.Location)
@@ -101,13 +101,13 @@ exports.updateProduct = async (req, res) => {
     }
 
     if (req.files || req.file) {
-      if ( req.files && req.files.length > 0) {
-        for(let file=0;file<req.files.length;file++){
+      if (req.files && req.files.length > 0) {
+        for (let file = 0; file < req.files.length; file++) {
           const image = await imageUpload(req.files[file], product._id)
           product.image.push(image.Location)
+        }
+        await product.save()
       }
-      await product.save()
-      } 
       if (req.file) {
         const image = await imageUpload(req.file, product._id)
         product.image.push(image.Location)
@@ -147,13 +147,13 @@ exports.addImage = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' })
     }
     if (req.files || req.file) {
-      if ( req.files && req.files.length > 0) {
-        for(let file=0;file<req.files.length;file++){
+      if (req.files && req.files.length > 0) {
+        for (let file = 0; file < req.files.length; file++) {
           const image = await imageUpload(req.files[file], product._id)
           product.image.push(image.Location)
+        }
+        await product.save()
       }
-      await product.save()
-      } 
       if (req.file) {
         const image = await imageUpload(req.file, product._id)
         product.image.push(image.Location)
@@ -317,15 +317,15 @@ exports.getNewArrivals = async (req, res) => {
           path: 'subCategory',
         },
       ])
-     const products =  productData.filter((product)=>{
-        // check if product is arrived in last 7 days
-        const date = new Date()
-        const diffTime = Math.abs(date - product.createdAt)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        if(diffDays <= 90){
-          return product
-        }
-      })
+    const products = productData.filter((product) => {
+      // check if product is arrived in last 7 days
+      const date = new Date()
+      const diffTime = Math.abs(date - product.createdAt)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      if (diffDays <= 90) {
+        return product
+      }
+    })
     return res.status(200).json({ products })
   } catch (error) {
     console.error(error)
@@ -336,74 +336,112 @@ exports.getNewArrivals = async (req, res) => {
 // get five or less random products for carousel
 exports.addProductsToCarousel = async (req, res) => {
   try {
-    const {productId,toDisplay} = req.body
+    const { productId, toDisplay } = req.body
     const createCarousel = new CarouselProducts({
       productId,
-      toDisplay
+      toDisplay,
     })
     await createCarousel.save()
     return res.status(200).json({ message: 'Product added to carousel' })
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: error.message });
+    console.error(error)
+    return res.status(500).json({ message: error.message })
   }
 }
 
 exports.deleteProductsFromCarouselOrHide = async (req, res) => {
   try {
-    const {productId,toDisplay} = req.body
-    if(toDisplay){
-      const product = await CarouselProducts.findOne({productId})
+    const { productId, toDisplay } = req.body
+    if (toDisplay) {
+      const product = await CarouselProducts.findOne({ productId })
       product.toDisplay = false
       await product.save()
-      return res.status(200).json({ message: 'Product hide from carousel is successful' })
-    }
-    else{
-     await CarouselProducts.findOneAndUpdate({productId},{
-        isDeleted:true,
-        deletedAt:Date.now()
-      },{new:true}) 
+      return res
+        .status(200)
+        .json({ message: 'Product hide from carousel is successful' })
+    } else {
+      await CarouselProducts.findOneAndUpdate(
+        { productId },
+        {
+          isDeleted: true,
+          deletedAt: Date.now(),
+        },
+        { new: true },
+      )
       return res.status(200).json({ message: 'Product removed from carousel' })
     }
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: error.message });
+    console.error(error)
+    return res.status(500).json({ message: error.message })
   }
 }
 
 exports.getProductsForCarousel = async (req, res) => {
   try {
-    const products = await CarouselProducts.find({toDisplay:true,isDeleted:false}).populate([
+    const products = await CarouselProducts.find({
+      toDisplay: true,
+      isDeleted: false,
+    }).populate([
       {
         path: 'productId',
-        populate:[
+        populate: [
           {
-            path:'discount'
+            path: 'discount',
           },
           {
-            path:'category'
+            path: 'category',
           },
           {
-            path:'subCategory'
-          }
-        ]
-      }
+            path: 'subCategory',
+          },
+        ],
+      },
     ])
-    if(products.length === 0){
+    if (products.length === 0) {
       const randomProducts = await getRandomProducts()
-      return res.status(200).json({ products:randomProducts })
+      return res.status(200).json({ products: randomProducts })
     }
     return res.status(200).json({ products })
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: error.message });
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+// search products
+exports.searchProducts = async (req, res) => {
+  try {
+    const searchInput = req.query.searchInput
+    const products = await Product.find({
+      name: {
+        $regex: searchInput,
+        $options: 'i',
+      },
+    })
+      .select('_id,name,images,price,discount')
+      .populate([
+        {
+          path: 'discount',
+        },
+        {
+          path: 'category',
+        },
+        {
+          path: 'subCategory',
+        },
+      ])
+    return res.status(200).send({
+      products,
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
   }
 }
 
-// get random up to 5 products for carousel 
+// get random up to 5 products for carousel
 const getRandomProducts = async () => {
   try {
-    const products = await Product.find({isDeleted:false}).populate([
+    const products = await Product.find({ isDeleted: false }).populate([
       {
         path: 'discount',
       },
@@ -414,8 +452,8 @@ const getRandomProducts = async () => {
         path: 'subCategory',
       },
     ])
-    
-    const randomProducts = lodash.sampleSize(products,5)
+
+    const randomProducts = lodash.sampleSize(products, 5)
     return randomProducts
   } catch (error) {
     return error

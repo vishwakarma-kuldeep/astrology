@@ -56,14 +56,11 @@ exports.addAboutUs = async (req, res) => {
       description,
     })
     if (req.files || req.file) {
-      if(req.files.length>0){
-        for (let file = 0; file < req.files.length; file++) {
-          const fileUrl = await uploadFile(req.files[file], 'aboutUs')
-          if (fileUrl) {
-            aboutUsData.image.push(fileUrl.Location)
-          }
-          await aboutUsData.save()
-        }
+      const file = req.files[0] || req.file
+      const fileUrl = await uploadFile(file, 'aboutUs')
+      if (fileUrl) {
+        aboutUsData.image = fileUrl.Location
+        await aboutUsData.save()
       }
     }
     await aboutUsData.save()
@@ -75,7 +72,6 @@ exports.addAboutUs = async (req, res) => {
 }
 exports.updateAboutUs = async (req, res) => {
   try {
-    console.log(req.body,req.files)
     const { title, description, isDeleted } = req.body
     const aboutUsData = await aboutUs.findById(req.params.id)
     if (!aboutUsData)
@@ -87,14 +83,10 @@ exports.updateAboutUs = async (req, res) => {
     aboutUsData.isDeleted = isDeleted ? isDeleted : aboutUsData.isDeleted
     aboutUsData.deletedAt = isDeleted ? Date.now() : aboutUsData.deletedAt
     if (req.files || req.file) {
-      if(req.files.length>0 && req.files){
-        for (let file = 0; file < req.files.length; file++) {
-          const fileUrl = await uploadFile(req.files[file], 'aboutUs')
-          if (fileUrl) {
-            console.log(fileUrl)
-            aboutUsData.image.push(fileUrl.Location)
-          }
-        }
+      const file = req.files[0] || req.file
+      const fileUrl = await uploadFile(file, 'aboutUs')
+      if (fileUrl) {
+        aboutUsData.image = fileUrl.Location
         await aboutUsData.save()
       }
     }

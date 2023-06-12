@@ -86,4 +86,6 @@ router.post(
   productController.deleteProductsFromCarouselOrHide,
 )
 
+router.get('/search',[middleware.authenticateToken], productController.searchProducts)
+
 module.exports = router

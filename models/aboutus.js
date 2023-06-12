@@ -10,9 +10,9 @@ const aboutUsSchema = new Schema({
         type:String,
         trim:true
     },
-    image:[{
+    image:{
         type:String
-    }],
+    },
     isDeleted:{
         type:Boolean,
         default:false
