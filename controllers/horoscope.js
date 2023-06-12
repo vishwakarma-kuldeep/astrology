@@ -4,15 +4,15 @@ const Horoscope = require('../models/horoscope')
 const HoroscopeCategory = require('../models/horoscopeCategory')
 
 exports.createHoroscopeCategory = async (req, res) => {
-  const { name, description } = req.body
+  const { name, description,horoscope } = req.body
   try {
     if (!req.body)
       return res.status(400).json({ message: 'Please fill all the fields' })
     let horoscopeCategory = new HoroscopeCategory({
       name,
       description,
+      horoscope
     })
-
     if (req.file || req.files) {
       if (req.files && req.files.length > 0) {
        for(let file = 0; file < req.files.length; file++) {
@@ -48,8 +48,17 @@ exports.getHoroscopeCategory = async (req, res) => {
   try {
     const horoscopeCategory = await HoroscopeCategory.find({
       isDeleted: false,
-    })
+    }).populate('horoscope')
     return res.status(200).json({ horoscopeCategory })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+exports.getCardsByCategory = async (req,res)=>{
+  try {
+    const category = req.query.category;
+    const horoscope = await Horoscope.find({horoscopeType:category, isDeleted: false })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
@@ -71,27 +80,7 @@ exports.createHoroscope = async (req, res) => {
       return res.status(400).json({ message: 'Horoscope already exists' })
     }
     horoscope = new Horoscope()
-    if (req.files || req.file) {
-      if (req.files && req.files.length > 0) {
-        for (let file = 0; file < req.files.length; file++) {
-          const image = await globalImageUploader(
-            req.files[file],
-            horoscope._id,
-            'horoscope',
-          )
-          horoscope.image.push(image.Location)
-        }
-        await horoscope.save()
-      } else {
-        const image = await globalImageUploader(
-          req.file,
-          horoscope._id,
-          'horoscope',
-        )
-        horoscope.image.push(image.Location)
-        await horoscope.save()
-      }
-    }
+    
     horoscope.title = title
     horoscope.description = description
     horoscope.date = date

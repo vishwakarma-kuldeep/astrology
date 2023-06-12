@@ -1,32 +1,25 @@
 const Horoscope = require("../models/horoscope");
 const HoroscopeCategory = require("../models/horoscopeCategory");
 
-exports.checkHoroscopeCategory = async (req, res, next) => {
-  try {
-    let { name } = req.body;
-    const check = await HoroscopeCategory.findOne({ name: name });
-    if (check) {
-      return res
-        .status(400)
-        .json({ message: "Horoscope category already exists" });
-    }
-    next();
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: error.message });
-  }
-};
+// exports.checkHoroscopeCategory = async (req, res, next) => {
+//   try {
+//     let { name } = req.body;
+//     const check = await HoroscopeCategory.findOne({ name: name });
+//     if (check) {
+//       return res
+//         .status(400)
+//         .json({ message: "Horoscope category already exists" });
+//     }
+//     next();
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
 
 exports.checkCategoryId = async (req, res, next) => {
   try {
-    let id;
-    if(req.body.horoscopeCategory){
-        id = req.body.horoscopeCategory
-    }else{
-        id = req.params.id
-    }
-   
-
+    let id = req.params.id || req.body.horoscopeCategory;
     const check = await HoroscopeCategory.findOne({ _id: id });
     if (!check) {
       return res

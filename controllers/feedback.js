@@ -40,10 +40,13 @@ exports.updateFeedback = async (req,res)=>{
     try {
         const id = req.params.id;
         const {points} = req.body;
-        const feedbacks = await feedback.findByIdAndUpdate({_id:id},{
-            points:points,
-            user:req.user.userId
-        });
+        let obj = {
+            points: points,
+            user: req.user.userId
+        }
+        let feedbacks = await feedback.findById({_id:id});
+        feedbacks.feedBacks.push(obj);
+        await feedbacks.save();
         return res.status(200).json({message:"Feedback added successfully"});
     } catch (error) {
         console.error(error)

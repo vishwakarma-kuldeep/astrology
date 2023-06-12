@@ -10,15 +10,12 @@ const horoscopeSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    image: [
-      {
-        type: String,
-      },
-    ],
+   
     horoscopeType: {
       type: String,
       trim: true,
-      enum:["monthly","yearly","daily","weekly","MONTHLY","YEARLY","DAILY","WEEKLY"]
+      enum:["monthly","yearly","daily","weekly","tomorrow","MONTHLY","YEARLY","DAILY","WEEKLY",
+    "TOMORROW"]
     },
     date: {
       type: String,
@@ -28,6 +25,7 @@ const horoscopeSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+ 
     isDeleted: {
       type: Boolean,
       default: false,

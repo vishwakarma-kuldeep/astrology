@@ -1,7 +1,6 @@
 const Horoscope = require('../controllers/horoscope')
 const { checkAdmin } = require('../middlewares/adminmiddleware')
 const { authenticateToken } = require('../middlewares/auth')
-const { checkHoroscopeCategory } = require('../middlewares/horoscope')
 const router = require('express').Router()
 
 router.post(
@@ -12,7 +11,7 @@ router.post(
 
 router.post(
   '/create-horoscope-category',
-  [authenticateToken, checkAdmin, checkHoroscopeCategory],
+  [authenticateToken, checkAdmin],
   Horoscope.createHoroscopeCategory,
 )
 

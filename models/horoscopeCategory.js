@@ -14,10 +14,11 @@ const horoscopeCategorySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    // horoscopeType:[{
-    //     type:mongoose.Schema.Types.ObjectId,
-    //     ref:"Horoscope"
-    // }],
+    horoscope:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Horoscope"
+    },
+    
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null },
   },

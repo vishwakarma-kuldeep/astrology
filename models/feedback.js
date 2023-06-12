@@ -12,15 +12,16 @@ const feedbackSchema = new Schema(
       type: String,
       trim: true,
     },
-    points: {
-      type: Number,
-    },
-    user: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-      },
-    ],
+    feedBacks:[{
+        user:{
+            type:Schema.Types.ObjectId,
+            ref:"User"
+        },
+        points:{
+            type:Number,
+        },
+        _id:false
+    }],
     isDeleted: {
       type: Boolean,
       default: false,

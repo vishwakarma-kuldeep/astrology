@@ -16,18 +16,18 @@ const cardSchema = new Schema(
         type: String,
       },
     ],
-    horoscope: [
+    horoscope: 
       {
         type: Schema.Types.ObjectId,
         ref: "Horoscope",
       },
-    ],
-    horoscopeCategory: [
+    
+    horoscopeCategory:
       {
         type: Schema.Types.ObjectId,
         ref: "HoroscopeCategory",
       },
-    ],
+ 
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
   },
