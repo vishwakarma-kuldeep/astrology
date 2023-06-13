@@ -6,10 +6,10 @@ const paymentSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"User"
     },
-    productId:{
+    productId:[{
         type:Schema.Types.ObjectId,
         ref:"Product" 
-    },
+    }],
     paymentId:{
         type:String,
         trim:true,
@@ -19,10 +19,10 @@ const paymentSchema = new Schema({
         trim:true,
         Enumerator:["COD","ONLINE","PAYTM","UPI","CARD","NETBANKING","WALLET","PAYPAL","cod","online","paytm","upi","card","netbanking","wallet","paypal"]
     },
-    amount:{
+    amount:[{
         type:String,
         trim:true,
-    },
+    }],
     paymentStatus:{
         type:String,
         trim:true,

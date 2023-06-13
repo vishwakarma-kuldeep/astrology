@@ -4,31 +4,38 @@ const Product = require("../models/product");
 const {paymentId} = require("../global/global");
 
 exports.createPayment = async (req, res) => {
-    let {productId,quantity,paymentType,status} = req.body;
+    let {products,paymentType,status} = req.body;
     try {
-        let product = await Product.findById(productId);
-        let productPrice = product.price;
-        let productQuantity = product.quantity;
-        if(+productQuantity < +quantity){
-            return res.status(400).json({ message: "Product quantity is less than the requested quantity" });
+        let price = [], quantity = [],name = [],ids = [];
+        for(let i =0;i<products.length;i++){
+            let product = await Product.findById(products[i].productId);
+            if(+product.quantity < +products[i].quantity){
+                return res.status(400).json({ message: "Product quantity is less than the requested quantity" });
+            }
+            const total = +product.price * +products[i].quantity;
+            price.push(total);
+            ids.push(product._id);
+            quantity.push(+product.quantity);
+            name.push(product.name);
         }
+        console.log(price,quantity,name)
         let payment = new Payment();
-        payment.quantity = quantity;
-        payment.amount = +productPrice * +quantity;
         payment.userId = req.user.userId;
-        payment.productId = productId;
+        payment.productId = ids;
         payment.paymentType = paymentType;
         payment.paymentStatus = status||"pending";
-        const pId =  await paymentId();
-        payment.paymentId = pId;
+        payment.amount = price;
+        payment.quantity = quantity;
         await payment.save();
         // update product quantity
-        const newQuantity = productQuantity - quantity;
-        console.log(newQuantity)
-        product.quantity = newQuantity;
-        await product.save();
+        for(let i =0;i<products.length;i++){
+            let product = await Product.findById(products[i].productId);
+            const newQuantity = +product.quantity - +products[i].quantity;
+            product.quantity = newQuantity;
+            await product.save();
+        }
 
-        return res.status(200).json({ message: "Payment created successfully",pId });
+        return res.status(200).json({ message: "Payment created successfully",  payment });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: error.message });
