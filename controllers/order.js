@@ -4,10 +4,10 @@ const Product = require("../models/product.js");
 const Payment = require("../models/payment.js");
 const global = require("../global/global.js");
 exports.createOrder = async (req, res) => {
-  let { productId, paymentId } = req.body;
+  let { products, paymentId } = req.body;
   try {
+    
     let order = new Order();
-    let product = await Product.findById(productId);
     let payment = await Payment.findOne({ paymentId: paymentId });
     if (!payment) {
       return res.status(404).json({ message: "Payment not found" });
@@ -18,7 +18,22 @@ exports.createOrder = async (req, res) => {
     order.orderId = await global.OrderId();
     await order.save();
 
-    const OrderDetail = await Order.findById(order._id);
+    const OrderDetail = await Order.findById(order._id).populate([
+      {
+        path: "userId",
+        // select: 'firstName lastName mobileNumber email'
+      },
+      {
+        path: "paymentId",
+        // select: 'paymentId'
+        populate:{
+          path:"productId"
+        },
+      
+      
+      },
+    
+    ]);
     return res
       .status(200)
       .json({ message: "Order created successfully", OrderDetail });

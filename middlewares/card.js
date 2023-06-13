@@ -2,7 +2,9 @@ const Card = require("../models/card");
 
 exports.checkCardId = async (req, res, next) => {
   try {
-    const id = req.params.id || req.body.card;
+    let id = req.params.id || req.body.card;
+    id = id.trim();
+
     const checkCard = await Card.findById(id);
     if (!checkCard) {
       return res.status(400).json({ message: "Card does not exist" });

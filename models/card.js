@@ -21,7 +21,6 @@ const cardSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "Horoscope",
       },
-    
     horoscopeCategory:
       {
         type: Schema.Types.ObjectId,

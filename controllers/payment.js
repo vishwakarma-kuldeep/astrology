@@ -1,7 +1,7 @@
 const Payment = require("../models/payment");
 const User = require("../models/users");
 const Product = require("../models/product");
-const {paymentId} = require("../global/global");
+const {generatePaymentId} = require("../global/global");
 
 exports.createPayment = async (req, res) => {
     let {products,paymentType,status} = req.body;
@@ -18,13 +18,14 @@ exports.createPayment = async (req, res) => {
             quantity.push(+product.quantity);
             name.push(product.name);
         }
-        console.log(price,quantity,name)
+        const paymentId = await generatePaymentId();
         let payment = new Payment();
         payment.userId = req.user.userId;
         payment.productId = ids;
         payment.paymentType = paymentType;
         payment.paymentStatus = status||"pending";
         payment.amount = price;
+        payment.paymentId = paymentId;
         payment.quantity = quantity;
         await payment.save();
         // update product quantity
@@ -35,7 +36,7 @@ exports.createPayment = async (req, res) => {
             await product.save();
         }
 
-        return res.status(200).json({ message: "Payment created successfully",  payment });
+        return res.status(200).json({ message: "Payment created successfully",  paymentId });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: error.message });

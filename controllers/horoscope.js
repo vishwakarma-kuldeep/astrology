@@ -59,6 +59,7 @@ exports.getCardsByCategory = async (req,res)=>{
   try {
     const category = req.query.category;
     const horoscope = await Horoscope.find({horoscopeType:category, isDeleted: false })
+    return res.status(200).json({ horoscope })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })

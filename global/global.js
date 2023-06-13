@@ -82,7 +82,7 @@ const paymentIdGenerator = () => {
     paymentId += chars[Math.floor(Math.random() * chars.length)];
   return paymentId;
 };
-const paymentId = async () => {
+const generatePaymentId = async () => {
   const paymentId = paymentIdGenerator();
   const payment = await Payment.findOne({ paymentId: paymentId });
   if (payment) {
@@ -118,6 +118,6 @@ module.exports = {
   otpGenerator,
   sendEmail,
   OrderId,
-  paymentId,
+  generatePaymentId,
   subscriptionId,
 };

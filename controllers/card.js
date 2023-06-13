@@ -5,12 +5,13 @@ const { globalImageUploader } = require('../global/fileUploader')
 const horoscopeCategory = require('../models/horoscopeCategory')
 
 exports.createCard = async (req, res) => {
-  const { title, description, horoscopeCategory } = req.body
+  const { title, description, horoscopeCategory,horoscope } = req.body
   try {
     let card = new Card({
       title,
       description,
-      horoscopeCategory
+      horoscopeCategory,
+      horoscope
     })
     await card.save()
     let cardData = await Card.findById(card._id)
@@ -43,12 +44,18 @@ exports.createCard = async (req, res) => {
 
 exports.getCard = async (req, res) => {
   try {
-    const card = await Card.findById(req.params.id).populate([
+    const card = await Card.findById(req.params.id.trim()).populate([
       {
         path: 'horoscopeCategory',
         model: 'HoroscopeCategory',
       },
+      {
+        path: 'horoscope',
+        model: 'Horoscope',
+      }
+
     ])
+    console.log(card)
     return res.status(200).json({ card })
   } catch (error) {
     console.error(error)
@@ -123,6 +130,10 @@ exports.getAllCards = async (req, res) => {
       {
         path: 'horoscopeCategory',
         model: 'HoroscopeCategory',
+        populate:{
+          path:"horoscope"
+
+        }
       },
     ])
     return res.status(200).json({ cards })
