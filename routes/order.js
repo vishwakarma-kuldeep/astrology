@@ -28,4 +28,8 @@ router.get(
   [middleware.authenticateToken, userMiddleware.checkUser],
   Order.cancelOrder
 );
+
+router.get('/getall', [middleware.authenticateToken, adminMiddleware.checkAdmin], Order.getAllOrders)
+
+router.post('/update/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin], Order.updateOrderStatus)
 module.exports = router;

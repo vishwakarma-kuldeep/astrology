@@ -14,7 +14,7 @@ const dbConnection = require("./lib/db");
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
 const categoryRouter = require("./routes/category");
-const subCategoryRouter = require("./routes/subcategory");
+// const subCategoryRouter = require("./routes/subcategory");
 const productRouter = require("./routes/product");
 const paymentRouter = require("./routes/payment");
 const orderRouter = require("./routes/order");
@@ -55,7 +55,7 @@ if (app.get("env") === "development") {
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/category", categoryRouter);
-app.use("/api/sub-category", subCategoryRouter);
+// app.use("/api/sub-category", subCategoryRouter);
 app.use('/api/products', productRouter);
 app.use('/api/payment', paymentRouter);
 app.use('/api/order', orderRouter);

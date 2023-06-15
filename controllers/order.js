@@ -104,3 +104,40 @@ exports.cancelOrder = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+exports.getAllOrders  = async (req, res) => {
+  try {
+    // orderStatus:!"cancelled"
+    const orders = await Order.find({isDeleted:false}).populate([
+      {
+        path: "userId",
+        select: 'firstName lastName mobileNumber email address'
+      },
+      {
+        path: "paymentId",
+      },
+    ]);
+    return res.status(200).json({ message: "Orders found successfully", orders });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const status = req.body.status;
+    let order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    order.orderStatus = status;
+    await order.save();
+    // send email to user
+    return res.status(200).json({ message: "Order status updated successfully", order });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+}

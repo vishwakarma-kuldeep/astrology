@@ -1,5 +1,5 @@
 const Category = require('../models/category')
-const SubCategory = require('../models/subCategory')
+// const SubCategory = require('../models/subCategory')
 const Product = require('../models/product')
 const { imageUpload } = require('../global/fileUploader')
 const Discount = require('../models/discount')
@@ -12,7 +12,7 @@ exports.addProduct = async (req, res) => {
       name,
       description,
       category,
-      subCategory,
+      // subCategory,
       price,
       discount,
       HSNCODE,
@@ -22,7 +22,8 @@ exports.addProduct = async (req, res) => {
       quantity,
       SKU,
     } = req.body
-    let product = await Product.findOne({ name, category, subCategory })
+    // subCategory
+    let product = await Product.findOne({ name, category, })
     if (product) {
       return res.status(400).json({ message: 'Product already exists' })
     }
@@ -30,7 +31,7 @@ exports.addProduct = async (req, res) => {
     product.name = name
     product.description = description
     product.category = category
-    product.subCategory = subCategory
+    // product.subCategory = subCategory
     product.price = price
     product.currency = currency
     product.discount = discount
@@ -68,7 +69,7 @@ exports.updateProduct = async (req, res) => {
       name,
       description,
       category,
-      subCategory,
+      // subCategory,
       price,
       discount,
       HSNCODE,
@@ -87,7 +88,7 @@ exports.updateProduct = async (req, res) => {
     product.name = name ? name : product.name
     product.description = description ? description : product.description
     product.category = category ? category : product.category
-    product.subCategory = subCategory ? subCategory : product.subCategory
+    // product.subCategory = subCategory ? subCategory : product.subCategory
     product.price = price ? price : product.price
     product.discount = discount ? discount : product.discount
     product.HSNCODE = HSNCODE ? HSNCODE : product.HSNCODE
@@ -194,9 +195,9 @@ exports.getAllProducts = async (req, res) => {
       {
         path: 'category',
       },
-      {
-        path: 'subCategory',
-      },
+      // {
+      //   path: 'subCategory',
+      // },
     ])
     return res.status(200).json({ products })
   } catch (error) {
@@ -215,9 +216,9 @@ exports.getProductById = async (req, res) => {
       {
         path: 'category',
       },
-      {
-        path: 'subCategory',
-      },
+      // {
+      //   path: 'subCategory',
+      // },
     ])
     return res.status(200).json({ product })
   } catch (error) {
@@ -264,9 +265,9 @@ exports.getProductsByCategory = async (req, res) => {
       {
         path: 'category',
       },
-      {
-        path: 'subCategory',
-      },
+      // {
+      //   path: 'subCategory',
+      // },
     ])
     return res.status(200).json({ products })
   } catch (error) {
@@ -275,29 +276,29 @@ exports.getProductsByCategory = async (req, res) => {
   }
 }
 
-exports.getProductsBySubCategory = async (req, res) => {
-  try {
-    const id = req.params.id
-    const products = await Product.find({
-      subCategory: id,
-      isDeleted: false,
-    }).populate([
-      {
-        path: 'discount',
-      },
-      {
-        path: 'category',
-      },
-      {
-        path: 'subCategory',
-      },
-    ])
-    return res.status(200).json({ products })
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: error.message })
-  }
-}
+// exports.getProductsBySubCategory = async (req, res) => {
+//   try {
+//     const id = req.params.id
+//     const products = await Product.find({
+//       subCategory: id,
+//       isDeleted: false,
+//     }).populate([
+//       {
+//         path: 'discount',
+//       },
+//       {
+//         path: 'category',
+//       },
+//       {
+//         path: 'subCategory',
+//       },
+//     ])
+//     return res.status(200).json({ products })
+//   } catch (error) {
+//     console.error(error)
+//     return res.status(500).json({ message: error.message })
+//   }
+// }
 
 // Get New Arrivals
 
@@ -313,9 +314,9 @@ exports.getNewArrivals = async (req, res) => {
         {
           path: 'category',
         },
-        {
-          path: 'subCategory',
-        },
+        // {
+        //   path: 'subCategory',
+        // },
       ])
     const products = productData.filter((product) => {
       // check if product is arrived in last 7 days
@@ -391,9 +392,9 @@ exports.getProductsForCarousel = async (req, res) => {
           {
             path: 'category',
           },
-          {
-            path: 'subCategory',
-          },
+          // {
+          //   path: 'subCategory',
+          // },
         ],
       },
     ])
@@ -425,9 +426,9 @@ exports.searchProducts = async (req, res) => {
         {
           path: 'category',
         },
-        {
-          path: 'subCategory',
-        },
+        // {
+        //   path: 'subCategory',
+        // },
       ])
     return res.status(200).send({
       products,
@@ -440,10 +441,11 @@ exports.searchProducts = async (req, res) => {
 // get similar products
 exports.getSimilarProducts = async (req, res) => {
   try {
-    const { category, subCategory } = req.body
+    // subCategory
+    const { category } = req.body
     const products = await Product.find({
       category: category,
-      subCategory: subCategory,
+      // subCategory: subCategory,
       isDeleted: false,
     }).populate([
       {
@@ -452,9 +454,9 @@ exports.getSimilarProducts = async (req, res) => {
       {
         path: 'category',
       },
-      {
-        path: 'subCategory',
-      },
+      // {
+      //   path: 'subCategory',
+      // },
     ])
     return res.status(200).send({
       products,
@@ -477,9 +479,9 @@ const getRandomProducts = async () => {
       {
         path: 'category',
       },
-      {
-        path: 'subCategory',
-      },
+      // {
+      //   path: 'subCategory',
+      // },
     ])
 
     const randomProducts = lodash.sampleSize(products, 5)

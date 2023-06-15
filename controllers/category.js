@@ -1,7 +1,7 @@
 // const category = require("../models/category");
 const Admin = require('../models/admin')
 const Category = require('../models/category')
-const SubCategory = require('../models/subCategory')
+// const SubCategory = require('../models/subCategory')
 const { imageUpload } = require('../global/fileUploader')
 
 exports.createCategory = async (req, res) => {

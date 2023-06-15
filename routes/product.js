@@ -46,11 +46,11 @@ router.get(
   productController.getProductsByCategory,
 )
 // Get Products by subcategory
-router.get(
-  '/get-by-subcategory/:id',
-  [middleware.authenticateToken, product.checkSubCategory],
-  productController.getProductsBySubCategory,
-)
+// router.get(
+//   '/get-by-subcategory/:id',
+//   [middleware.authenticateToken, product.checkSubCategory],
+//   productController.getProductsBySubCategory,
+// )
 
 // Get New Arrivals
 router.get(

@@ -20,6 +20,9 @@ const orderSchema = new mongoose.Schema({
     orderStatus:{
         type:String,
         trim:true,
+        default:"pending",
+        enum:["pending","confirmed","cancelled","delivered","returned","refunded","completed","processing","shipped","dispatched"]
+
     },
     isDeleted:{type:Boolean,default:false},
     deletedAt:{type:Date}
