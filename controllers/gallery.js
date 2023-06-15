@@ -9,7 +9,7 @@ const {
 } = require('../services/transactions')
 
 exports.addFolder = async (req, res) => {
-  const session = await sessionStarter(Gallery)
+  // const session = await sessionStarter(Gallery)
   let { title, description } = req.body
   try {
     let gallery = await Gallery.findOne({ title: title })
@@ -22,14 +22,14 @@ exports.addFolder = async (req, res) => {
     })
     if (req.file || req.files) {
       if (req.files && req.files.length > 0) {
-        req.files.forEach(async (file) => {
+       for(let file = 0; file < req.files.length; file++){
           const imageData = await globalImageUploader(
-            file,
+            req.files[file],
             gallery._id,
             'gallery',
           )
           gallery.image = imageData.Location
-        })
+        }
         await gallery.save({session})
       } else {
         if (req.file) {
@@ -44,15 +44,15 @@ exports.addFolder = async (req, res) => {
       }
     }
     await gallery.save({session})
-    await sessionCommiter(session)
+    // await sessionCommiter(session)
     return res.status(200).json({ message: 'Folder created successfully' })
   } catch (error) {
     console.error(error)
-    await sessionAborter(session)
+    // await sessionAborter(session)
     return res.status(500).json({ message: error.message })
 
   }
-  await sessionEnder(session)
+  // await sessionEnder(session)
 }
 
 exports.updateFolder = async (req, res) => {
@@ -104,6 +104,7 @@ exports.getFolders = async (req, res) => {
 
 exports.deleteFolder = async (req, res) => {
   try {
+    
     let gallery = await Gallery.findById(req.params.id)
     gallery.isDeleted = true
     gallery.deletedAt = Date.now()

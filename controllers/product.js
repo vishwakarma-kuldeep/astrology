@@ -71,6 +71,7 @@ exports.updateProduct = async (req, res) => {
       category,
       // subCategory,
       price,
+      currency,
       discount,
       HSNCODE,
       GST,
@@ -90,6 +91,7 @@ exports.updateProduct = async (req, res) => {
     product.category = category ? category : product.category
     // product.subCategory = subCategory ? subCategory : product.subCategory
     product.price = price ? price : product.price
+    product.currency = currency ? currency : product.currency
     product.discount = discount ? discount : product.discount
     product.HSNCODE = HSNCODE ? HSNCODE : product.HSNCODE
     product.GST = GST ? GST : product.GST
@@ -126,12 +128,12 @@ exports.updateProduct = async (req, res) => {
 exports.removeImage = async (req, res) => {
   try {
     const id = req.params.id
-    const imageId = req.body.image
+    const imageId = req.body.imageUrl
     let product = await Product.findOne({ _id: id })
     if (!product) {
       return res.status(404).json({ message: 'Product not found' })
     }
-    product.image = product.image.filter((image) => image._id != imageId)
+    product.image = product.image.filter((image) => image != imageId)
     await product.save()
     return res.status(200).json({ message: 'Image removed successfully' })
   } catch (error) {
@@ -172,12 +174,14 @@ exports.addImage = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const id = req.params.id
+    const isDeleted = req.body.isDeleted
     let product = await Product.findById(id)
     if (!product) {
       return res.status(404).json({ message: 'Product not found' })
     }
-    product.isDeleted = true
-    product.deletedAt = Date.now()
+    isDeleted? product.isDeleted = isDeleted :  product.isDeleted = isDeleted
+    // product.isDeleted = isDeleted?isDeleted:product. 
+    product.deletedAt = isDeleted?Date.now(): null
     await product.save()
     return res.status(200).json({ message: 'Product deleted successfully' })
   } catch (error) {

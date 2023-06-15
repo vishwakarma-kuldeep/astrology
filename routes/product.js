@@ -14,11 +14,17 @@ router.post(
   [middleware.authenticateToken, adminMiddleware.checkAdmin],
   productController.updateProduct,
 )
+
+router.post('/delete/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin], productController.deleteProduct)
+
 router.post(
   '/add-image/:id',
   [middleware.authenticateToken, adminMiddleware.checkAdmin],
   productController.addImage,
 )
+
+router.post('/remove-image/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin], productController.removeImage)
+
 router.post(
   '/add-discount/:id',
   [
