@@ -24,5 +24,10 @@ router.post(
   [authenticateToken, checkAppointment,checkUser],
   Appointment.cancelAppointment
 );
+router.post(
+  "/cancel-appointment/:id",
+  [authenticateToken, checkAppointment,checkAdmin],
+  Appointment.cancelAppointment
+);
 
 module.exports = router;

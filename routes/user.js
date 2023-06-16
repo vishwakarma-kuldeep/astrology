@@ -3,7 +3,7 @@ const userController = require('../controllers/users');
 const middleware = require('../middlewares/auth');
 const { checkProduct } = require('../middlewares/product');
 const validator = require('../validators/validator');
-
+const {checkAdmin} = require("../middlewares/adminmiddleware");
 // Get routes
 router.get('/get',middleware.authenticateToken,userController.getProfile);
 router.get('/verify-token',middleware.authenticateToken,userController.veryfyToken);
@@ -19,4 +19,9 @@ router.post('/add-to-wishlist',[middleware.authenticateToken,checkProduct],userC
 router.post('/remove-from-wishlist',[middleware.authenticateToken,checkProduct],userController.removeFromWishlist);
 // Get wishlist
 router.get('/get-wishlist',middleware.authenticateToken,userController.getWishlist);
+
+
+
+// Admin routes
+router.get('/get-all',[middleware.authenticateToken,checkAdmin],userController.getAllUsers);
 module.exports = router;

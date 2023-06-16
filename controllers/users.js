@@ -183,3 +183,13 @@ exports.getWishlist = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({ isDeleted: false })
+    return res.status(200).json({ message: 'Users fetched successfully', users })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
