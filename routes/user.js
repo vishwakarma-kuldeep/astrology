@@ -24,4 +24,5 @@ router.get('/get-wishlist',middleware.authenticateToken,userController.getWishli
 
 // Admin routes
 router.get('/get-all',[middleware.authenticateToken,checkAdmin],userController.getAllUsers);
+router.post('/delete/:id',[middleware.authenticateToken,checkAdmin],userController.deleteUser);
 module.exports = router;

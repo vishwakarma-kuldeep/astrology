@@ -186,8 +186,25 @@ exports.getWishlist = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await userModel.find({ isDeleted: false })
+    const users = await userModel.find()
     return res.status(200).json({ message: 'Users fetched successfully', users })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const {isDeleted} = req.body
+    let user = await userModel.findOne({ _id: req.params.id })
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    isDeleted ? (user.isDeleted = true) : (user.isDeleted = false)
+    isDeleted ? user.deletedAt = new Date() : user.deletedAt = null
+    await user.save()
+    return res.status(200).json({ message: 'User update successfully' })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
