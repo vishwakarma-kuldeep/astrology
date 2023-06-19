@@ -31,4 +31,7 @@ router.post(
   Jyotis.deleteJyotis,
 )
 
+router.post('/add-image/:id',[auth.authenticateToken, Admin.checkAdmin],Jyotis.changeJyotisImage)
+
+
 module.exports = router

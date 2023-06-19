@@ -183,3 +183,20 @@ exports.deleteJyotis = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 }
+
+exports.changeJyotisImage = async (req, res) => {
+  try {
+    const jyotisId = req.params.id;
+    const image = await globalImageUploader(req.files[0], jyotisId, "jyotis");
+    let jyotis = await Jyotis.findOne({
+      _id: jyotisId,
+      isDeleted: false,
+    });
+    jyotis.image = image.Location;
+    await jyotis.save();
+    return res.status(200).json({ message: "Jyotis image changed successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+}

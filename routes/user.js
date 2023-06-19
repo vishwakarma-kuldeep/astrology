@@ -1,5 +1,6 @@
 const router  = require('express').Router();
 const userController = require('../controllers/users');
+const adminController = require('../controllers/admin');
 const middleware = require('../middlewares/auth');
 const { checkProduct } = require('../middlewares/product');
 const validator = require('../validators/validator');
@@ -25,4 +26,7 @@ router.get('/get-wishlist',middleware.authenticateToken,userController.getWishli
 // Admin routes
 router.get('/get-all',[middleware.authenticateToken,checkAdmin],userController.getAllUsers);
 router.post('/delete/:id',[middleware.authenticateToken,checkAdmin],userController.deleteUser);
+
+router.post('/create-user',[middleware.authenticateToken,checkAdmin],adminController.createUser);
+
 module.exports = router;

@@ -16,7 +16,9 @@ const hashVerifier = async (input, hash) => {
   return result;
 };
 const tokenGenerator = (input) => {
-  const token = jwt.sign(input, process.env.JWT_SECRET);
+  const token = jwt.sign(input, process.env.JWT_SECRET,{
+    expiresIn: "1d",
+  });
   return token;
 };
 

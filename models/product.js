@@ -55,7 +55,14 @@ const productSchema = new Schema(
       type: String,
       trim: true,
     },
-
+    isTrending:{
+      type:Boolean,
+      default:false
+    },
+    isBestSeller:{
+      type:Boolean,
+      default:false
+    },
 
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },

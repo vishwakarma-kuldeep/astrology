@@ -7,6 +7,7 @@ const {
   sendEmail,
   hashVerifier,
 } = require('../global/global')
+const users = require('../models/users')
 
 exports.signup = async (req, res) => {
   let { firstName, lastName, email, password, mobileNumber } = req.body
@@ -124,5 +125,62 @@ exports.update = async (req, res) => {
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
+  }
+}
+
+exports.createUser = async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    gender,
+    dateOfBirth,
+    address,
+    mobileNumber,
+    countryCode,
+  } = req.body
+  try {
+    if(!email || !mobileNumber) 
+    return res.status(401).json({ message: 'Email or mobile number is required' })
+
+    
+    let check = await checkUser(email, mobileNumber)
+    if (check) {
+      return res.status(401).json({ message: 'User already exists' })
+    }
+    let user = new users()
+    const files = req.files || req.file
+
+    if (files) {
+      const file = await uploadFile(files[0], user._id)
+      user.profileImg = file.Location
+    }
+    user.firstName = firstName
+    user.lastName = lastName
+    user.email = email
+    user.gender = gender
+    user.countryCode = countryCode
+    user.dateOfBirth = dateOfBirth ? dateOfBirth.toString() : dateOfBirth
+    user.address = address
+    user.mobileNumber = mobileNumber
+    user = await user.save()
+    return res.status(200).json({ message: 'User created successfully' })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+const checkUser = async (email, mobileNumber) => {
+  try {
+    const check = await users.find({
+      $or: [{ email: email }, { mobileNumber: mobileNumber }],
+    })
+    if (check.length > 0) {
+      return true
+    }
+    return false
+  } catch (error) {
+    return error
   }
 }

@@ -11,4 +11,6 @@ router.post(
   [middleware.authenticateToken, adminMiddleware.checkAdmin],
   AdminController.update,
 )
+
+
 module.exports = router
