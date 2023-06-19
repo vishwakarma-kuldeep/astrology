@@ -11,7 +11,7 @@ const feedbackSchema = new Schema(
     answer: {
       type: String,
       trim: true,
-    },
+    }, 
     feedBacks:[{
         user:{
             type:Schema.Types.ObjectId,
