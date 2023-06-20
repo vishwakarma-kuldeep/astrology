@@ -5,7 +5,7 @@ const { imageUpload } = require('../global/fileUploader')
 const Discount = require('../models/discount')
 const CarouselProducts = require('../models/carouselProducts')
 const lodash = require('lodash')
-
+const { getMostOrderedProducts ,getAverageOfMostOrderedProducts} = require('./trendings')
 exports.addProduct = async (req, res) => {
   try {
     const {
@@ -23,7 +23,7 @@ exports.addProduct = async (req, res) => {
       SKU,
     } = req.body
     // subCategory
-    let product = await Product.findOne({ name, category, })
+    let product = await Product.findOne({ name, category })
     if (product) {
       return res.status(400).json({ message: 'Product already exists' })
     }
@@ -179,9 +179,11 @@ exports.deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found' })
     }
-    isDeleted? product.isDeleted = isDeleted :  product.isDeleted = isDeleted
-    // product.isDeleted = isDeleted?isDeleted:product. 
-    product.deletedAt = isDeleted?Date.now(): null
+    isDeleted
+      ? (product.isDeleted = isDeleted)
+      : (product.isDeleted = isDeleted)
+    // product.isDeleted = isDeleted?isDeleted:product.
+    product.deletedAt = isDeleted ? Date.now() : null
     await product.save()
     return res.status(200).json({ message: 'Product deleted successfully' })
   } catch (error) {
@@ -203,6 +205,9 @@ exports.getAllProducts = async (req, res) => {
       //   path: 'subCategory',
       // },
     ])
+    // this is only for automation of trending products
+     await  getMostOrderedProducts()
+     
     return res.status(200).json({ products })
   } catch (error) {
     console.error(error)
@@ -487,10 +492,19 @@ const getRandomProducts = async () => {
       //   path: 'subCategory',
       // },
     ])
-
     const randomProducts = lodash.sampleSize(products, 5)
     return randomProducts
   } catch (error) {
     return error
+  }
+}
+
+exports.bestSellingProducts = async (req, res) => {
+  try {
+    const mostOrderedProducts = await getAverageOfMostOrderedProducts()
+    return res.status(200).json({ mostOrderedProducts })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
   }
 }

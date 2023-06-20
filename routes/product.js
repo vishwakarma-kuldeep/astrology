@@ -15,7 +15,11 @@ router.post(
   productController.updateProduct,
 )
 
-router.post('/delete/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin], productController.deleteProduct)
+router.post(
+  '/delete/:id',
+  [middleware.authenticateToken, adminMiddleware.checkAdmin],
+  productController.deleteProduct,
+)
 
 router.post(
   '/add-image/:id',
@@ -23,7 +27,11 @@ router.post(
   productController.addImage,
 )
 
-router.post('/remove-image/:id', [middleware.authenticateToken, adminMiddleware.checkAdmin], productController.removeImage)
+router.post(
+  '/remove-image/:id',
+  [middleware.authenticateToken, adminMiddleware.checkAdmin],
+  productController.removeImage,
+)
 
 router.post(
   '/add-discount/:id',
@@ -97,6 +105,15 @@ router.get(
   [middleware.authenticateToken],
   productController.searchProducts,
 )
-router.post('/get-similar-products', [middleware.authenticateToken],productController.getSimilarProducts)
+router.post(
+  '/get-similar-products',
+  [middleware.authenticateToken],
+  productController.getSimilarProducts,
+)
+// router.get(
+//   '/get-bestseller-products',
+//   [middleware.authenticateToken],
+//   productController.bestSellingProducts,
+// )
 
 module.exports = router
