@@ -93,7 +93,7 @@ exports.updateAboutUs = async (req, res) => {
     await aboutUsData.save()
     return res.status(201).json({ message: 'About Us updated successfully' })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ message: error.message })
   }
 }

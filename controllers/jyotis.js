@@ -38,7 +38,6 @@ exports.addJyotis = async (req, res) => {
 };
 
 exports.updateJyotis = async (req, res) => {
-  // console.log((req.body.address))
   let {
     name,
     email,
@@ -79,7 +78,6 @@ exports.updateJyotis = async (req, res) => {
     jyotis.expertIn = expertIn ? expertIn : jyotis.expertIn;
     // Address details update
     if(!jyotis.address) jyotis.address = {};
-    // console.log(JSON.parse(req.body.address))
     jyotis.address.city = address.city ? address.city : jyotis.address.city;
     jyotis.address.state = address.state ? address.state : jyotis.address.state;
     jyotis.address.country = address.country

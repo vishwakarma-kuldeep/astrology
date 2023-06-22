@@ -55,7 +55,6 @@ exports.getCard = async (req, res) => {
       }
 
     ])
-    console.log(card)
     return res.status(200).json({ card })
   } catch (error) {
     console.error(error)

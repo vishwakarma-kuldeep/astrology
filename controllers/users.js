@@ -30,7 +30,7 @@ exports.signup = async (req, res) => {
 
     return res.status(200).json({ message: 'OTP sent successfully',sentotp })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ message: error.message })
   }
 }
@@ -71,7 +71,7 @@ exports.veryfyToken = async (req, res) => {
     }
     return res.status(200).json({ message: 'Token verified successfully' })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ message: error.message })
   }
 }
@@ -100,7 +100,7 @@ exports.updateProfile = async (req, res) => {
 
     return res.status(200).json({ message: 'User updated successfully' })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ message: error.message })
   }
 }
@@ -116,7 +116,7 @@ exports.getProfile = async (req, res) => {
     }
     return res.status(200).json({ message: 'User fetched successfully', user })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ message: error.message })
   }
 }
@@ -124,7 +124,6 @@ exports.getProfile = async (req, res) => {
 // Add product to wishlist
 exports.addToWishlist = async (req, res) => {
   try {
-    console.log(req.body)
     const { productId } = req.body
     const userData = await userModel.findOne({ _id: req.user.userId })
     const wishlist = userData.wishlist

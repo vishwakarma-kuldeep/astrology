@@ -28,7 +28,7 @@ const tokenVerifier = (token) => {
     process.env.JWT_SECRET,
     (err, decoded) => {
       if (err) {
-        console.log(err);
+      
         return err;
       }
       return decoded;
@@ -39,7 +39,7 @@ const tokenVerifier = (token) => {
 
 const otpGenerator = () => {
   const otp = Math.floor(100000 + Math.random() * 900000);
-  console.log(otp);
+  
   return otp;
 };
 

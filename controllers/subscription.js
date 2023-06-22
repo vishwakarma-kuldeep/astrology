@@ -15,7 +15,6 @@ exports.createSubscription = async (req, res) => {
   try {
    
     const sId = await subscriptionId();
-    console.log(sId);
     const getPlan = await Plan.findById(plan);
     let subcription = new Subscrition({
       plan,

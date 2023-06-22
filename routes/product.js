@@ -110,10 +110,10 @@ router.post(
   [middleware.authenticateToken],
   productController.getSimilarProducts,
 )
-// router.get(
-//   '/get-bestseller-products',
-//   [middleware.authenticateToken],
-//   productController.bestSellingProducts,
-// )
+router.get(
+  '/get-all-trending-products',
+  [middleware.authenticateToken],
+  productController.getAllTrendingProducts,
+)
 
 module.exports = router

@@ -60,7 +60,6 @@ const getMostOrderedProducts = async () => {
         await product.save()
       }
     }
-    console.log(mostOrderedProducts)
     mostOrderedProducts.sort((a, b) => {
       return b.count - a.count
     })
@@ -81,9 +80,8 @@ const getAverageOfMostOrderedProducts = async () => {
     for (let i = 0; i < mostOrderedProducts.length; i++) {
       average += mostOrderedProducts[i].count
     }
-    console.log(mostOrderedProducts)
     average = average / mostOrderedProducts.length
-    console.log(average)
+ 
 
     return average
   } catch (error) {

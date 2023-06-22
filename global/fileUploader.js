@@ -3,7 +3,6 @@ const uuid = require('uuid').v4
 
 exports.uploadFile = async (file, user) => {
   try {
-    console.log(file,user)
     let s3 = new S3({
       accessKeyId: process.env.AWS_KEY, // process.env.ACCESS
       secretAccessKey: process.env.AWS_SECRET,

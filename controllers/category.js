@@ -15,7 +15,6 @@ exports.createCategory = async (req, res) => {
     category.name = name
     category.description = description
     if (req.files.length>0 || req.file  !== undefined ) {
-      console.log(req.files)
       if (req.files) {
         const image = await imageUpload(req.files[0], category._id)
         category.image = image.Location

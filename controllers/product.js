@@ -214,6 +214,28 @@ exports.getAllProducts = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+exports.getAllTrendingProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isDeleted: false,isTrending:true }).populate([
+      {
+        path: 'discount',
+      },
+      {
+        path: 'category',
+      },
+      // {
+      //   path: 'subCategory',
+      // },
+    ])
+    // this is only for automation of trending products
+     await  getMostOrderedProducts()
+     
+    return res.status(200).json({ products })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: error.message })
+  }
+}
 
 exports.getProductById = async (req, res) => {
   try {
