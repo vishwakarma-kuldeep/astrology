@@ -124,6 +124,10 @@ exports.getProfile = async (req, res) => {
         {
           path: 'subscription',
           model: 'Subscription',
+          populate:{
+            path:"plan",
+            model:"Plan"
+          }
         },
       ])
     if (!user) {
@@ -214,6 +218,7 @@ exports.getAllUsers = async (req, res) => {
       {
         path: 'subscription',
         model: 'Subscription',
+        
       },
     ])
     return res
