@@ -110,7 +110,16 @@ exports.getProfile = async (req, res) => {
     let user = await userModel.findOne({
       _id: req.user.userId,
       isDeleted: false,
-    })
+    }).populate([{
+      path: 'wishlist',
+      model: 'Product',
+    },{
+      path: 'cart',
+      model: 'Product',
+    },{
+      path:'subscription',
+      model:'Subscription'
+    }])
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
