@@ -4,7 +4,7 @@ const {
   hashGenerator,
   hashVerifier,
   subscriptionId,
-  paymentId,
+  generatePaymentId,
   sendEmail,
 } = require("../global/global");
 const Payment = require("../models/payment");
@@ -22,7 +22,7 @@ exports.createSubscription = async (req, res) => {
       subscriptionId: sId,
     });
     await subcription.save();
-    let payId = await paymentId();
+    let payId = await generatePaymentId();
     // Import payment integration method here
 
     let payment = new Payment({

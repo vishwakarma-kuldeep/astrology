@@ -19,7 +19,7 @@ exports.signup = async (req, res) => {
     }
 
     let otp = otpGenerator()
-    let sentotp = otp;
+    let sentotp = otp
     let otpExpiration = new Date(new Date().getTime() + 5 * 60 * 1000)
     otp = await hashGenerator(otp.toString())
     await userModel.updateOne(
@@ -28,7 +28,7 @@ exports.signup = async (req, res) => {
       { new: true },
     )
 
-    return res.status(200).json({ message: 'OTP sent successfully',sentotp })
+    return res.status(200).json({ message: 'OTP sent successfully', sentotp })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
@@ -107,19 +107,25 @@ exports.updateProfile = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    let user = await userModel.findOne({
-      _id: req.user.userId,
-      isDeleted: false,
-    }).populate([{
-      path: 'wishlist',
-      model: 'Product',
-    },{
-      path: 'cart',
-      model: 'Product',
-    },{
-      path:'subscription',
-      model:'Subscription'
-    }])
+    let user = await userModel
+      .findOne({
+        _id: req.user.userId,
+        isDeleted: false,
+      })
+      .populate([
+        {
+          path: 'wishlist',
+          model: 'Product',
+        },
+        {
+          path: 'cart',
+          model: 'Product',
+        },
+        {
+          path: 'subscription',
+          model: 'Subscription',
+        },
+      ])
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
@@ -174,18 +180,20 @@ exports.removeFromWishlist = async (req, res) => {
 // Get wishlist
 exports.getWishlist = async (req, res) => {
   try {
-    const {wishlist} = await userModel
-      .findOne({ _id: req.user.userId }, 'wishlist')
-    let wishlistData =   wishlist.map(async (product) => {
-        const productData = await Product.findOne({ _id: product })
-       
-        return productData
-      })
-   wishlistData = await Promise.all(wishlistData) 
-   
+    const { wishlist } = await userModel.findOne(
+      { _id: req.user.userId },
+      'wishlist',
+    )
+    let wishlistData = wishlist.map(async (product) => {
+      const productData = await Product.findOne({ _id: product })
+
+      return productData
+    })
+    wishlistData = await Promise.all(wishlistData)
+
     return res
       .status(200)
-      .json({ message: 'Wishlist fetched successfully', wishlistData  })
+      .json({ message: 'Wishlist fetched successfully', wishlistData })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
@@ -194,8 +202,23 @@ exports.getWishlist = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await userModel.find()
-    return res.status(200).json({ message: 'Users fetched successfully', users })
+    const users = await userModel.find().populate([
+      {
+        path: 'wishlist',
+        model: 'Product',
+      },
+      {
+        path: 'cart',
+        model: 'Product',
+      },
+      {
+        path: 'subscription',
+        model: 'Subscription',
+      },
+    ])
+    return res
+      .status(200)
+      .json({ message: 'Users fetched successfully', users })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: error.message })
@@ -204,13 +227,13 @@ exports.getAllUsers = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const {isDeleted} = req.body
+    const { isDeleted } = req.body
     let user = await userModel.findOne({ _id: req.params.id })
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
     isDeleted ? (user.isDeleted = true) : (user.isDeleted = false)
-    isDeleted ? user.deletedAt = new Date() : user.deletedAt = null
+    isDeleted ? (user.deletedAt = new Date()) : (user.deletedAt = null)
     await user.save()
     return res.status(200).json({ message: 'User update successfully' })
   } catch (error) {
