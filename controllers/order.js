@@ -53,7 +53,11 @@ exports.getOrder = async (req, res) => {
       {
         path: "paymentId",
         // select: 'paymentId'
+        populate:{
+          path:"productId"
+        }
       },
+     
     ]);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
